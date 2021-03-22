@@ -1,0 +1,22 @@
+{
+    "name": "codecustom/module-purelogviewer",
+    "description": "Magento 2 logger and view module",
+    "type": "magento2-module",
+    "version": "0.1",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "VictorPankovych",
+            "email": "pankovych.v@gmail.com"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "CodeCustom\\PureLogViewer\\": ""
+        }
+    }
+}
+
