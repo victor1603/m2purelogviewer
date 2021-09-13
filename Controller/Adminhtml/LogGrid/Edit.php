@@ -1,12 +1,12 @@
 <?php
 
-namespace CodeCustom\PureLogViewer\Controller\Adminhtml\LogViewer;
+namespace CodeCustom\PureLogViewer\Controller\Adminhtml\LogGrid;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
 
-class Index extends Action
+class Edit extends Action
 {
 
     /**
@@ -27,7 +27,7 @@ class Index extends Action
     {
         $resultPage = $this->pageFactory->create();
         $resultPage->setActiveMenu('CodeCustom_PureLogViewer::log');
-        $resultPage->getConfig()->getTitle()->prepend(__('Log viewer'));
+        $resultPage->getConfig()->getTitle()->prepend(__('Edit Log Path'));
         return $resultPage;
     }
 }

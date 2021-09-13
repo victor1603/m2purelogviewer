@@ -1,0 +1,105 @@
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">code_custom_purelog_form.code_custom_purelog_form_data_source</item>
+            <item name="deps" xsi:type="string">code_custom_purelog_form.code_custom_purelog_form_data_source</item>
+        </item>
+
+        <item name="label" xsi:type="string" translate="true">LogPath</item>
+        <item name="config" xsi:type="array">
+            <item name="dataScope" xsi:type="string">data</item>
+            <item name="namespace" xsi:type="string">logpath_form</item>
+        </item>
+
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+
+        <item name="buttons" xsi:type="array">
+            <item name="back" xsi:type="string">CodeCustom\OrderStatusReason\Block\Adminhtml\Reason\Back</item>
+            <item name="save" xsi:type="string">CodeCustom\OrderStatusReason\Block\Adminhtml\Reason\Save</item>
+        </item>
+    </argument>
+
+    <dataSource name="code_custom_status_reasons_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">CodeCustom\PureLogViewer\Model\LogPath\DataProvider</argument>
+            <argument name="name" xsi:type="string">code_custom_purelog_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">entity_id</argument>
+            <argument name="requestFieldName" xsi:type="string">entity_id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="submit_url" xsi:type="url" path="purelog/loggrid/save" />
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+
+    <fieldset name="reason">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="collapsible" xsi:type="boolean">false</item>
+                <item name="label" xsi:type="string" translate="true">Logpath Fieldset</item>
+            </item>
+        </argument>
+
+        <field name="entity_id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="visible" xsi:type="boolean">false</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">logpath</item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="name">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string">Log name</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">logpath</item>
+                    <item name="notice" xsi:type="string" translate="true">Just name of log or log directory</item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="path">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string">Log path</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">logpath</item>
+                    <item name="notice" xsi:type="string" translate="true">Path to log file or directory (log/custom_log/some_logs)
+                        examples: log/custom_log/some_logs/file.log || log/custom_log/some_logs/$year/$month/$day
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="is_date_log">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string">Is date log</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">checkbox</item>
+                    <item name="valueMap" xsi:type="array">
+                        <item name="true" xsi:type="number">1</item>
+                        <item name="false" xsi:type="number">0</item>
+                    </item>
+                    <item name="source" xsi:type="string">features</item>
+                    <item name="notice" xsi:type="string" translate="true">Flag for logs directory with date folder
+                        log/custom_log/payments/$year/$month/$day) if enabled used datepicker on viewer page</item>
+                </item>
+            </argument>
+        </field>
+    </fieldset>
+</form>

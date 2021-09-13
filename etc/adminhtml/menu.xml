@@ -1,0 +1,29 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add
+            id="CodeCustom_PureLogViewer::log"
+            title="Log viewer"
+            module="CodeCustom_PureLogViewer"
+            sortOrder="51"
+            resource="CodeCustom_PureLogViewer::log"
+        />
+        <add
+            id="CodeCustom_PureLogViewer::log_grid"
+            title="Log grid"
+            module="CodeCustom_PureLogViewer"
+            sortOrder="10"
+            parent="CodeCustom_PureLogViewer::log"
+            resource="CodeCustom_PureLogViewer::log_grid"
+            action="purelog/loggrid/index"
+        />
+        <add
+            id="CodeCustom_PureLogViewer::log_viewer"
+            title="Log viewer"
+            module="CodeCustom_PureLogViewer"
+            sortOrder="11"
+            parent="CodeCustom_PureLogViewer::log"
+            resource="CodeCustom_PureLogViewer::log_viewer"
+            action="purelog/logviewer/index"
+        />
+    </menu>
+</config>

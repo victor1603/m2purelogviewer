@@ -1,0 +1,45 @@
+<?php /** @var \CodeCustom\PureLogViewer\Block\Adminhtml\Log\Viewer $block */?>
+<div class="switcher">
+    <select id="log-changer" style="width: 12em; height: 35px">
+        <option value="0" is_date_log="0"><?= $block->escapeHtml(__('Choose log name'))?></option>
+        <?php foreach ($block->getLogPaths() as $logPath) :?>
+            <option
+                value="<?= $logPath['entity_id']?>"
+                is_file="<?= $logPath['is_file']?>"
+                is_date_log="<?= $logPath['is_date_log']?>"
+            ><?= $block->escapeHtml($logPath['name']); ?></option>
+        <?php endforeach; ?>
+    </select>
+    <div style="width: 15em; display: none" id="select-date-block">
+        <input type="text" style="height: 35px;width: 100%;" name="select-date" id="select-date" placeholder="<?= $block->escapeHtml(__('Choose Log date')); ?>">
+    </div>
+    <select id="log-file-changer" style="width: 20em; height: 35px" disabled>
+        <option value="connector"><?= $block->escapeHtml(__('Select Log File')); ?></option>
+    </select>
+    <button id="connector-log-reloader" style="margin-left: 5px;">
+        <span><?= $block->escapeHtml(__('Reload')); ?></span>
+    </button>
+</div>
+<div style="padding-top: 25px; ">
+    <h3 id="connector-log-header" style="border-bottom: 4px solid #dfdfdf; color: #eb5e00;">
+        <?= $block->escapeHtml(__('')); ?>
+    </h3>
+</div>
+
+<div style="border: 4px solid #dfdfdf; overflow: hidden; height: 510px; padding: 5px;">
+    <div id="log_data"
+         style="width:100%;height:500px;overflow:auto;margin:0;padding:3px;background:#033fa5;color:#ffffff;
+         font:normal 11px Lucida Console, Courier New, serif;">
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "CodeCustom_PureLogViewer/js/logUpdater":{
+                "urlList":"<?= $block->escapeUrl($block->getLogListUrl()) ?>",
+                "urlFile":"<?= $block->escapeUrl($block->getLogReaderUrl()) ?>"
+            }
+        }
+    }
+</script>
