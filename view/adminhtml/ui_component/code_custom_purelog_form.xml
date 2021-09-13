@@ -14,8 +14,8 @@
         <item name="template" xsi:type="string">templates/form/collapsible</item>
 
         <item name="buttons" xsi:type="array">
-            <item name="back" xsi:type="string">CodeCustom\OrderStatusReason\Block\Adminhtml\Reason\Back</item>
-            <item name="save" xsi:type="string">CodeCustom\OrderStatusReason\Block\Adminhtml\Reason\Save</item>
+            <item name="back" xsi:type="string">CodeCustom\PureLogViewer\Block\Adminhtml\Grid\Button\Back</item>
+            <item name="save" xsi:type="string">CodeCustom\PureLogViewer\Block\Adminhtml\Grid\Button\Save</item>
         </item>
     </argument>
 
