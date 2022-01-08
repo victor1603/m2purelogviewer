@@ -41,8 +41,7 @@ class DataProvider extends AbstractDataProvider
 
         $items = $this->collection->getItems();
 
-        foreach($items as $contact)
-        {
+        foreach($items as $contact) {
             $this->_loadedData[$contact->getId()] = $contact->getData();
         }
 

@@ -16,12 +16,28 @@ class LogReader extends Action
      */
     protected $jsonFactory;
 
+    /**
+     * @var FileSystem
+     */
     protected $fileSystem;
 
+    /**
+     * @var LogPathRepositoryInterface
+     */
     protected $logPathRepository;
 
+    /**
+     * @var Escaper
+     */
     protected $escaper;
 
+    /**
+     * @param Context $context
+     * @param JsonFactory $jsonFactory
+     * @param FileSystem $fileSystem
+     * @param LogPathRepositoryInterface $logPathRepository
+     * @param Escaper $escaper
+     */
     public function __construct(
         Context $context,
         JsonFactory $jsonFactory,
@@ -37,6 +53,10 @@ class LogReader extends Action
         parent::__construct($context);
     }
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Json
+     * @throws \Exception
+     */
     public function execute()
     {
         $result = $this->jsonFactory->create();
@@ -47,8 +67,33 @@ class LogReader extends Action
         }
         $log = $this->logPathRepository->getById($entity_id);
         $data = $this->fileSystem->readLog($log->getPath(), $log->getIsDateLog(), $data['logDate'], $data['logFile']);
-        $result->setData(['data' => nl2br($this->escaper->escapeHtml($data))]);
+        $result->setData(
+            [
+                'data' => $this->addLineNumber(nl2br($this->escaper->escapeHtml($data)))
+            ]
+        );
 
         return $result;
+    }
+
+    /**
+     * @param string $content
+     * @return string
+     */
+    private function addLineNumber(string $content = '')
+    {
+        try {
+            $newContent = '';
+            $lineNum = 1;
+            foreach (explode(PHP_EOL, $content) as $line) {
+                if ($line) {
+                    $newContent .= "<b>[$lineNum]></b> " . $line;
+                    $lineNum++;
+                }
+            }
+            return $newContent;
+        } catch (\Exception $exception) {
+            return $content;
+        }
     }
 }
