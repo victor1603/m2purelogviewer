@@ -14,11 +14,21 @@
         <input type="text" style="height: 35px;width: 100%;" name="select-date" id="select-date" placeholder="<?= $block->escapeHtml(__('Choose Log date')); ?>">
     </div>
     <select id="log-file-changer" style="width: 20em; height: 35px" disabled>
-        <option value="connector"><?= $block->escapeHtml(__('Select Log File')); ?></option>
+        <option value=""><?= $block->escapeHtml(__('Select Log File')); ?></option>
     </select>
     <button id="connector-log-reloader" style="margin-left: 5px;">
         <span><?= $block->escapeHtml(__('Reload')); ?></span>
     </button>
+    <form style="width: 100px; display: inline-block;" id="log-dwnld" method="post" action="<?= $block->getDownloadUrl()?>">
+        <input name="form_key" type="hidden" value="<?php echo $block->escapeHtml($block->getFormKey()) ?>" />
+        <input name="logId" type="hidden" value="" />
+        <input name="logDate" type="hidden" value="" />
+        <input name="logFile" type="hidden" value="" />
+        <button type="button" id="connector-log-dwnld" style="margin-left: 5px;" >
+            <span><?= $block->escapeHtml(__('Download')); ?></span>
+        </button>
+    </form>
+
 </div>
 <div style="padding-top: 25px; ">
     <h3 id="connector-log-header" style="border-bottom: 4px solid #dfdfdf; color: #eb5e00;">

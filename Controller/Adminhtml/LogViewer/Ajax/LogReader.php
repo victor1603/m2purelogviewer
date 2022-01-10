@@ -67,9 +67,10 @@ class LogReader extends Action
         }
         $log = $this->logPathRepository->getById($entity_id);
         $data = $this->fileSystem->readLog($log->getPath(), $log->getIsDateLog(), $data['logDate'], $data['logFile']);
+        $content = $this->addLineNumber(nl2br($this->escaper->escapeHtml($data)));
         $result->setData(
             [
-                'data' => $this->addLineNumber(nl2br($this->escaper->escapeHtml($data)))
+                'data' => $content
             ]
         );
 

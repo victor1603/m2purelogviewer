@@ -11,7 +11,7 @@ class FileSystem
     const YEAR_VAR      = '$year';
     const MONTH_VAR     = '$month';
     const DAY_VAR       = '$day';
-    const BEFORE_LNGTH  = 1000000;
+    const BEFORE_LNGTH  = 2000000;
 
     /**
      * @var DriverInterface
@@ -76,7 +76,7 @@ class FileSystem
      * @param null $path
      * @return string
      */
-    public function readLog($path = null, $is_date_log = false, $date = null, $filename = null)
+    public function readLog($path = null, $is_date_log = false, $date = null, $filename = null, $readFullLog = false)
     {
         $content = '';
         try {
@@ -92,7 +92,9 @@ class FileSystem
                 return $content;
             }
             $h = $this->driver->fileOpen($logPath, 'r');
-            fseek($h, -self::BEFORE_LNGTH, SEEK_END);
+            if (!$readFullLog) {
+                fseek($h, -self::BEFORE_LNGTH, SEEK_END);
+            }
             $logStat = $this->driver->stat($logPath);
             if (isset($logStat['size']) && $logStat['size'] > 0) {
                 $content = $this->driver->fileReadLine($h, $logStat['size']);
@@ -109,6 +111,11 @@ class FileSystem
         return $content;
     }
 
+    /**
+     * @param $path
+     * @param $date
+     * @return array|mixed|string|string[]
+     */
     private function getDatePath($path, $date)
     {
         if (!$path || !$date) {

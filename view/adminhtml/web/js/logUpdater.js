@@ -73,7 +73,22 @@ define(['jquery', 'domReady!', 'mage/calendar', 'Magento_Ui/js/modal/alert'], fu
             $('#log_data').html(json.data);
             $('body').trigger('processStop');
             scroll();
+        }).fail(function(xhr, status, error) {
+            $('body').trigger('processStop');
         });
+    }
+
+    function logDownload() {
+        let logId = $('#log-changer').val();
+        let logDate = $('#select-date').val() != undefined ? $('#select-date').val() : '';
+        let logFile = $('#log-file-changer').val();
+        if (logId == '0' || !logFile) {
+            return false;
+        }
+        $('#log-dwnld input[name="logId"]').val(logId);
+        $('#log-dwnld input[name="logDate"]').val(logDate);
+        $('#log-dwnld input[name="logFile"]').val(logFile);
+        $('#log-dwnld').submit();
     }
 
     /**
@@ -108,6 +123,10 @@ define(['jquery', 'domReady!', 'mage/calendar', 'Magento_Ui/js/modal/alert'], fu
         //Reload button event
         $('#connector-log-reloader').click(function () {
             logRead(logUpdater.urlFile);
+        });
+
+        $('#connector-log-dwnld').click(function () {
+            logDownload();
         });
 
         //Datepicker
