@@ -7,11 +7,16 @@ use Magento\Framework\App\Filesystem\DirectoryList;
 
 class FileSystem
 {
-    const LOG_EXT       = '.log';
-    const YEAR_VAR      = '$year';
-    const MONTH_VAR     = '$month';
-    const DAY_VAR       = '$day';
-    const BEFORE_LNGTH  = 2000000;
+
+    const IS_SUCCESS_LOADED     = 'is_success_loaded';
+    const FILE_LINES_COUNT      = 'lines_count';
+    const FILE_CONTENT          = 'content';
+
+    const LOG_EXT               = '.log';
+    const YEAR_VAR              = '$year';
+    const MONTH_VAR             = '$month';
+    const DAY_VAR               = '$day';
+    const BEFORE_LNGTH          = 2000000;
 
     /**
      * @var DriverInterface
@@ -22,6 +27,16 @@ class FileSystem
      * @var DirectoryList
      */
     protected $directoryList;
+
+    /**
+     * @var null
+     */
+    protected $data = [];
+
+    /**
+     * @var bool
+     */
+    protected $_hasDataChanges = false;
 
     /**
      * @param DriverInterface $driver
@@ -36,6 +51,73 @@ class FileSystem
         $this->directoryList = $directoryList;
     }
 
+    /**
+     * @param $key
+     * @return mixed|null
+     */
+    public function getData($key = null)
+    {
+        if (!$key) {
+            return $this->data;
+        }
+
+        if ($key && !isset($this->data[$key])) {
+            return null;
+        }
+
+        return $this->data[$key];
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     * @return $this
+     */
+    public function setData($key, $value = null)
+    {
+        if ($key === (array)$key) {
+            if ($this->data !== $key) {
+                $this->_hasDataChanges = true;
+            }
+            foreach ($key as $k => $v) {
+                $this->data[$k] = $v;
+            }
+        } else {
+            if (!array_key_exists($key, $this->data) || $this->data[$key] !== $value) {
+                $this->_hasDataChanges = true;
+            }
+            $this->data[$key] = $value;
+        }
+        return $this;
+    }
+
+    public function isSuccessLoaded()
+    {
+        return $this->getData(self::IS_SUCCESS_LOADED);
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getContent()
+    {
+        return $this->getData(self::FILE_CONTENT);
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getLinesCount()
+    {
+        return $this->getData(self::FILE_LINES_COUNT);
+    }
+
+    /**
+     * @param $path
+     * @param $is_date_log
+     * @param $date
+     * @return $this|array|false|\Magento\Framework\Phrase
+     */
     public function readDirectory($path, $is_date_log = false, $date = null)
     {
         try {
@@ -73,12 +155,18 @@ class FileSystem
     }
 
     /**
-     * @param null $path
-     * @return string
+     * @param $path
+     * @param $is_date_log
+     * @param $date
+     * @param $filename
+     * @param $readFullLog
+     * @return $this|false
      */
     public function readLog($path = null, $is_date_log = false, $date = null, $filename = null, $readFullLog = false)
     {
         $content = '';
+        $this->setData(self::IS_SUCCESS_LOADED, true);
+
         try {
             if ($is_date_log && $date) {
                 $path = $this->getDatePath($path, $date);
@@ -89,7 +177,8 @@ class FileSystem
 
             $logPath = $this->directoryList->getPath('var') . DIRECTORY_SEPARATOR . $path;
             if (!$this->driver->isFile($logPath)) {
-                return $content;
+                $this->setData(self::IS_SUCCESS_LOADED, false);
+                return false;
             }
             $h = $this->driver->fileOpen($logPath, 'r');
             if (!$readFullLog) {
@@ -99,16 +188,19 @@ class FileSystem
             if (isset($logStat['size']) && $logStat['size'] > 0) {
                 $content = $this->driver->fileReadLine($h, $logStat['size']);
                 if ($content === false) {
-                    return "Log file is not readable";
+                    $this->setData(self::IS_SUCCESS_LOADED, false);
+                    $content = __('Log file is not readable');
                 }
                 $this->driver->fileClose($h);
             }
-
+            $this->setData(self::FILE_LINES_COUNT, count(file($logPath)));
         } catch (\Exception $exception) {
             $content = __('Cant load log file');
+            $this->setData(self::IS_SUCCESS_LOADED, false);
         }
 
-        return $content;
+        $this->setData(self::FILE_CONTENT, $content);
+        return $this;
     }
 
     /**
@@ -133,5 +225,25 @@ class FileSystem
             ],
             $path
         );
+    }
+
+    public function formatFileToView(string $content = '', int $linesCount = 0)
+    {
+        try {
+            $newContent = '';
+            $patern = "/\s*[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9]) INFO\s*/";
+            $contentLines = array_filter(preg_split($patern, $content));
+            $lineNum = $linesCount - (count($contentLines) - 1);
+
+            foreach ($contentLines as $line) {
+                if ($line) {
+                    $newContent .= "<b>[$lineNum]></b> " . $line;
+                    $lineNum++;
+                }
+            }
+            return $newContent;
+        } catch (\Exception $exception) {
+            return $content;
+        }
     }
 }

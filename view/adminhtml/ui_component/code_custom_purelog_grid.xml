@@ -31,6 +31,12 @@
             </argument>
         </argument>
     </dataSource>
+    <listingToolbar name="listing_top">
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
     <columns name="code_custom_purelog_columns">
         <selectionsColumn name="ids">
             <argument name="data" xsi:type="array">
@@ -90,4 +96,7 @@
             </argument>
         </actionsColumn>
     </columns>
+    <listingToolbar name="listing_bottom">
+        <paging name="listing_paging"/>
+    </listingToolbar>
 </listing>

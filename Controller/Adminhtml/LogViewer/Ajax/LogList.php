@@ -53,6 +53,10 @@ class LogList extends Action
                     'file_name' => basename($log->getPath())
                 ]);
             } else {
+                if ($data instanceof FileSystem) {
+                    $data = $data->getContent();
+                }
+
                 $result->setData([
                     'data' => nl2br($this->escaper->escapeHtml($data)),
                     'is_file' => '1',

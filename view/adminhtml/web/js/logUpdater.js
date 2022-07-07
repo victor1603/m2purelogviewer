@@ -129,15 +129,27 @@ define(['jquery', 'domReady!', 'mage/calendar', 'Magento_Ui/js/modal/alert'], fu
             logDownload();
         });
 
+        function unavailable(date) {
+            var string = $.datepicker.formatDate('dd-mm-yy',date);
+            return [unavailableDates.indexOf(string) == -1];
+        }
         //Datepicker
         let currentYear = new Date().getFullYear();
+        let unavailableDates = ["12-06-2020","10-06-2020"];
+
         $("#select-date").calendar({
+            beforeShowDay: unavailable,
             class:"select-date-picker",
             changeYear:true,
             changeMonth:true,
             yearRange: "2000:" + currentYear,
             buttonText:"Select Date",
             dateFormat:"dd-mm-yy"
+        });
+
+        $('#ui-datepicker-div').on('click' ,function (){
+
+            alert($(this).find('.ui-datepicker-month').val());
         });
     };
 });

@@ -67,7 +67,7 @@ class Download extends Action implements HttpPostActionInterface
         $content = nl2br($this->escaper->escapeHtml(
             $this->fileSystem->readLog(
                 $log->getPath(), $log->getIsDateLog(), $data['logDate'], $data['logFile'], true
-            )
+            )->getContent()
         ));
 
         /**
